@@ -54,50 +54,58 @@
             margin: 20px 0;
             border-left: 4px solid #2196f3;
         }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #d32f2f;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>PixelVoyager Minimal Integration Example</h1>
-        <p class="subtitle">Only need to include one JS file and one line of code to use</p>
+        <p class="subtitle">HTML Structure Registration - Zero JavaScript Configuration Required</p>
         
         <div class="tip">
             💡 Click any image below to experience the powerful features of PixelVoyager
         </div>
         
-        <!-- Example Images -->
-        <img src="https://picsum.photos/600/400?random=1" 
-             alt="Example Image 1" 
-             class="demo-image">
-             
-        <img src="https://picsum.photos/600/400?random=2" 
-             alt="Example Image 2" 
-             class="demo-image">
-             
-        <img src="https://picsum.photos/600/400?random=3" 
-             alt="Example Image 3" 
-             class="demo-image">
+        <!-- Example Images with HTML Structure Registration -->
+        <a href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop" class="pixel-voyager-link">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop" 
+                 alt="Beautiful Mountain Landscape" 
+                 class="demo-image">
+        </a>
+        
+        <a href="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=800&fit=crop" class="pixel-voyager-link">
+            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=800&fit=crop" 
+                 alt="Forest Path" 
+                 class="demo-image">
+        </a>
+        
+        <a href="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&h=800&fit=crop" class="pixel-voyager-link">
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&h=800&fit=crop" 
+                 alt="Ocean Waves" 
+                 class="demo-image">
+        </a>
         
         <div class="tip">
-            <strong>Integration Steps:</strong><br>
-            1. Include pixelvoyager.js<br>
-            2. Call PixelVoyager.openImage(url) and you're done
+            <strong>Integration Steps (HTML Structure Registration):</strong><br>
+            1. Wrap your <code>&lt;img&gt;</code> tags with <code>&lt;a&gt;</code> tags<br>
+            2. Add <code>class="pixel-voyager-link"</code> to the <code>&lt;a&gt;</code> tags<br>
+            3. Set <code>href</code> to the full-size image URL<br>
+            4. Include pixelvoyager.js and you're done!<br>
+            <em>No JavaScript configuration needed!</em>
         </div>
     </div>
 
     <!-- Include PixelVoyager (only this line needed) -->
     <script src="pixelvoyager.js"></script>
     
-    <script>
-        // Minimal integration code - only a few lines needed
-        document.addEventListener('DOMContentLoaded', function() {
-            // Bind click preview event to all images
-            document.querySelectorAll('.demo-image').forEach(img => {
-                img.addEventListener('click', function() {
-                    PixelVoyager.openImage(this.src);
-                });
-            });
-        });
-    </script>
+    <!-- That's it! No additional JavaScript code needed for HTML structure registration -->
 </body>
 </html>

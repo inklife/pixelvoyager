@@ -1,4 +1,4 @@
-# PixelVoyager: A Usefull ImageViewer
+# PixelVoyager: A Useful Image Viewer
 
 *[简体中文](README-zh.md) | English*
 
@@ -14,13 +14,36 @@ A lightweight pure JavaScript image preview library with no dependencies, ready 
 
 ## Quick Start
 
-### 1. Include the file
+### Method 1: HTML Structure Registration (Recommended)
+
+Simply wrap your images with `<a>` tags that have the `pixel-voyager-link` class, and the library will automatically register them when the page loads.
 
 ```html
-<script src="pixelvoyager.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PixelVoyager Example</title>
+</head>
+<body>
+    <!-- Wrap your images with <a> tags that have the "pixel-voyager-link" class -->
+    <!-- href is the image for fullscreen viewing, img src is the thumbnail displayed on page -->
+    <a href="high-res-image.jpg" class="pixel-voyager-link">
+        <img src="high-res-image-thumb.jpg" alt="Example Image">
+    </a>
+    
+    <a href="another-high-res-image.jpg" class="pixel-voyager-link">
+        <img src="another-high-res-image-thumb.jpg" alt="Another Image">
+    </a>
+    
+    <!-- Include the script and it works automatically -->
+    <script src="pixelvoyager.js"></script>
+</body>
+</html>
 ```
 
-### 2. Call the API
+### Method 2: JavaScript API
+
+You can also call the API directly:
 
 ```javascript
 // Preview a single image
@@ -29,7 +52,35 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 
 ## Examples
 
-### Minimal Integration Example
+### HTML Structure Registration Example
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PixelVoyager Example</title>
+</head>
+<body>
+    <div class="gallery">
+        <!-- href is the image for fullscreen viewing, img src is the thumbnail displayed on page -->
+        <a href="high-res-image1.jpg" class="pixel-voyager-link">
+            <img src="high-res-image1-thumb.jpg" alt="Image 1">
+        </a>
+        <a href="high-res-image2.jpg" class="pixel-voyager-link">
+            <img src="high-res-image2-thumb.jpg" alt="Image 2">
+        </a>
+        <a href="high-res-image3.jpg" class="pixel-voyager-link">
+            <img src="high-res-image3-thumb.jpg" alt="Image 3">
+        </a>
+    </div>
+    
+    <script src="pixelvoyager.js"></script>
+    <!-- That's it! No additional JavaScript needed -->
+</body>
+</html>
+```
+
+### JavaScript API Example
 
 ```html
 <!DOCTYPE html>
@@ -54,13 +105,36 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 
 ### Full Example
 
-Check the [imageviewer-minimal-en.html](imageviewer-minimal-en.html) file for a complete integration example.
+Check the [pixelvoyager-minimal-en.html](pixelvoyager-minimal-en.html) file for a complete integration example.
 
 ## API Documentation
 
+### HTML Structure Registration (Recommended)
+
+The simplest way to use PixelVoyager is through HTML structure registration. Just wrap your images with `<a>` tags that have the `pixel-voyager-link` class:
+
+```html
+<a href="high-res-image.jpg" class="pixel-voyager-link">
+    <img src="high-res-image-thumb.jpg" alt="Image description">
+</a>
+```
+
+**Requirements:**
+- Wrap `<img>` tags with `<a>` tags
+- The `<a>` tag must have the class `pixel-voyager-link`
+- The `href` attribute should contain the full-size image URL (this is the image shown in fullscreen)
+- The `<img>` tag inside should use a thumbnail or compressed version (this is the small image shown on the page)
+
+**Advantages:**
+- ✅ Zero JavaScript configuration required
+- ✅ SEO-friendly semantic HTML structure
+- ✅ Works immediately after including the script
+- ✅ Graceful degradation (links work even without JavaScript)
+- ✅ Auto-handles CSS styling to prevent whitespace issues
+
 ### PixelVoyager.openImage(url)
 
-Preview a single image
+Preview a single image programmatically
 
 **Parameters:**
 - `url` (String): Image URL

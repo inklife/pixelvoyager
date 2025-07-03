@@ -54,50 +54,58 @@
             margin: 20px 0;
             border-left: 4px solid #2196f3;
         }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #d32f2f;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>PixelVoyager 最小集成示例</h1>
-        <p class="subtitle">仅需要引入一个JS文件，一行代码即可使用</p>
+        <p class="subtitle">HTML 结构注册 - 无需任何 JavaScript 配置</p>
         
         <div class="tip">
             💡 点击下方任意图片即可体验 PixelVoyager 的强大功能
         </div>
         
-        <!-- 示例图片 -->
-        <img src="https://picsum.photos/600/400?random=1" 
-             alt="示例图片 1" 
-             class="demo-image">
-             
-        <img src="https://picsum.photos/600/400?random=2" 
-             alt="示例图片 2" 
-             class="demo-image">
-             
-        <img src="https://picsum.photos/600/400?random=3" 
-             alt="示例图片 3" 
-             class="demo-image">
+        <!-- 使用 HTML 结构注册的示例图片 -->
+        <a href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop" class="pixel-voyager-link">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop" 
+                 alt="美丽的山景" 
+                 class="demo-image">
+        </a>
+        
+        <a href="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=800&fit=crop" class="pixel-voyager-link">
+            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=800&fit=crop" 
+                 alt="森林小径" 
+                 class="demo-image">
+        </a>
+        
+        <a href="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&h=800&fit=crop" class="pixel-voyager-link">
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&h=800&fit=crop" 
+                 alt="海浪" 
+                 class="demo-image">
+        </a>
         
         <div class="tip">
-            <strong>集成步骤：</strong><br>
-            1. 引入 pixelvoyager.js<br>
-            2. 调用 PixelVoyager.openImage(url) 即可
+            <strong>集成步骤（HTML 结构注册）：</strong><br>
+            1. 用 <code>&lt;a&gt;</code> 标签包裹你的 <code>&lt;img&gt;</code> 标签<br>
+            2. 为 <code>&lt;a&gt;</code> 标签添加 <code>class="pixel-voyager-link"</code><br>
+            3. 设置 <code>href</code> 为完整尺寸图片的 URL<br>
+            4. 引入 pixelvoyager.js 即可！<br>
+            <em>无需 JavaScript 配置！</em>
         </div>
     </div>
 
     <!-- 引入 PixelVoyager（仅需这一行） -->
     <script src="pixelvoyager.js"></script>
     
-    <script>
-        // 最小集成代码 - 仅需几行代码
-        document.addEventListener('DOMContentLoaded', function() {
-            // 为所有图片绑定点击预览事件
-            document.querySelectorAll('.demo-image').forEach(img => {
-                img.addEventListener('click', function() {
-                    PixelVoyager.openImage(this.src);
-                });
-            });
-        });
-    </script>
+    <!-- 就是这样！HTML 结构注册无需额外的 JavaScript 代码 -->
 </body>
 </html>

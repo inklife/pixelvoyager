@@ -56,6 +56,7 @@
             this.checkPositionX = 0;
             this.checkPositionY = 0;
             this.moveCheckTimer = null;
+            this.resizeTimer = null;
             this.minScale = 0.1;
             this.maxScale = 5;
             
@@ -70,6 +71,7 @@
             this.handleTouchStart = this.handleTouchStart.bind(this);
             this.handleTouchMove = this.handleTouchMove.bind(this);
             this.handleTouchEnd = this.handleTouchEnd.bind(this);
+            this.handleResize = this.handleResize.bind(this);
         }
         
         static init() {
@@ -90,7 +92,28 @@
             // 仅在浏览器环境中初始化
             if (typeof document !== 'undefined') {
                 document.addEventListener('click', this.handleClick);
+                
+                // 自动为 pixel-voyager-link 元素添加样式以消除空白字符问题
+                this.applyAutoStyles();
             }
+        }
+        
+        // 自动应用样式
+        applyAutoStyles() {
+            // 检查是否已经添加了样式
+            if (document.getElementById('pixel-voyager-auto-styles')) {
+                return;
+            }
+            
+            // 创建并添加样式
+            const style = document.createElement('style');
+            style.id = 'pixel-voyager-auto-styles';
+            style.textContent = `
+                .pixel-voyager-link {
+                    display: inline-block;
+                }
+            `;
+            document.head.appendChild(style);
         }
         
         // 移除事件监听
@@ -530,6 +553,11 @@
             
             document.addEventListener('keydown', this.handleKeyDown);
             
+            // 添加窗口大小变化监听
+            if (typeof window !== 'undefined') {
+                window.addEventListener('resize', this.handleResize);
+            }
+            
             if (this.canvas) {
                 this.canvas.addEventListener('wheel', this.handleWheel, { passive: false });
                 this.canvas.addEventListener('mousedown', this.handleMouseDown);
@@ -559,6 +587,11 @@
             if (typeof document === 'undefined') return;
             
             document.removeEventListener('keydown', this.handleKeyDown);
+            
+            // 移除窗口大小变化监听
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('resize', this.handleResize);
+            }
             
             // 移除全局拖拽事件监听（确保清理）
             document.removeEventListener('mousemove', this.handleGlobalMouseMove);
@@ -831,12 +864,102 @@
                 this.moveCheckTimer = null;
             }
         }
+        
+        // 处理窗口大小变化
+        handleResize() {
+            if (!this.isOpen || !this.canvas || !this.currentImage) return;
+            
+            // 防抖：清除之前的定时器
+            if (this.resizeTimer) {
+                clearTimeout(this.resizeTimer);
+            }
+            
+            // 延迟执行重新布局，避免频繁触发
+            this.resizeTimer = setTimeout(() => {
+                this.resizeCanvas();
+            }, 100);
+        }
+        
+        // 重新计算和调整 Canvas 大小
+        resizeCanvas() {
+            if (!this.canvas || !this.currentImage) return;
+            
+            const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 800;
+            const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 600;
+            
+            // 计算新的可用视区大小
+            const availableWidth = windowWidth * 0.9;
+            const availableHeight = windowHeight - 200;
+            const halfAvailableWidth = availableWidth * 0.5;
+            const halfAvailableHeight = availableHeight * 0.5;
+            
+            // 获取图片原始尺寸
+            let imageWidth = this.currentImage.width;
+            let imageHeight = this.currentImage.height;
+            
+            // 重新计算初始显示尺寸和缩放比例
+            let displayWidth = imageWidth;
+            let displayHeight = imageHeight;
+            let newInitialScale = 1;
+            
+            // 如果图片太小，进行倍增直到达到可用区域的一半
+            while (displayWidth < halfAvailableWidth && displayHeight < halfAvailableHeight) {
+                displayWidth *= 2;
+                displayHeight *= 2;
+                newInitialScale *= 2;
+            }
+            
+            // 如果倍增后超出可用区域，则按比例缩小到适合可用区域
+            if (displayWidth > availableWidth || displayHeight > availableHeight) {
+                const scaleX = availableWidth / displayWidth;
+                const scaleY = availableHeight / displayHeight;
+                const finalScale = Math.min(scaleX, scaleY);
+                
+                displayWidth *= finalScale;
+                displayHeight *= finalScale;
+                newInitialScale *= finalScale;
+            }
+            
+            // 计算当前缩放相对于旧初始缩放的比例
+            const oldInitialScale = this.imageData.initialScale || 1;
+            const scaleRatio = this.scale / oldInitialScale;
+            
+            // 更新 Canvas 尺寸
+            this.canvas.width = displayWidth;
+            this.canvas.height = displayHeight;
+            this.canvas.style.width = displayWidth + 'px';
+            this.canvas.style.height = displayHeight + 'px';
+            
+            // 更新图片信息
+            this.imageData = {
+                width: displayWidth,
+                height: displayHeight,
+                naturalWidth: this.currentImage.width,
+                naturalHeight: this.currentImage.height,
+                initialScale: newInitialScale
+            };
+            
+            // 根据新的初始缩放比例调整当前缩放
+            this.scale = newInitialScale * scaleRatio;
+            
+            // 重新绘制
+            this.draw();
+            this.updateScaleInfo();
+            
+            console.log(`窗口大小变化，重新计算 Canvas 尺寸: ${Math.round(displayWidth)}x${Math.round(displayHeight)}, 新初始缩放: ${Math.round(newInitialScale * 100)}%`);
+        }
 
         // 关闭查看器
         close() {
             if (!this.isOpen) return;
             
             this.isOpen = false;
+            
+            // 清理定时器
+            if (this.resizeTimer) {
+                clearTimeout(this.resizeTimer);
+                this.resizeTimer = null;
+            }
             
             // 清理拖拽状态和全局事件监听
             if (this.isDragging) {
