@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVoyager Minimal Integration Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .demo-image {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .demo-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .tip {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PixelVoyager Minimal Integration Example</h1>
+        <p class="subtitle">Only need to include one JS file and one line of code to use</p>
+        
+        <div class="tip">
+            💡 Click any image below to experience the powerful features of PixelVoyager
+        </div>
+        
+        <!-- Example Images -->
+        <img src="https://picsum.photos/600/400?random=1" 
+             alt="Example Image 1" 
+             class="demo-image">
+             
+        <img src="https://picsum.photos/600/400?random=2" 
+             alt="Example Image 2" 
+             class="demo-image">
+             
+        <img src="https://picsum.photos/600/400?random=3" 
+             alt="Example Image 3" 
+             class="demo-image">
+        
+        <div class="tip">
+            <strong>Integration Steps:</strong><br>
+            1. Include pixelvoyager.js<br>
+            2. Call PixelVoyager.openImage(url) and you're done
+        </div>
+    </div>
+
+    <!-- Include PixelVoyager (only this line needed) -->
+    <script src="pixelvoyager.js"></script>
+    
+    <script>
+        // Minimal integration code - only a few lines needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bind click preview event to all images
+            document.querySelectorAll('.demo-image').forEach(img => {
+                img.addEventListener('click', function() {
+                    PixelVoyager.openImage(this.src);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

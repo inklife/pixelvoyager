@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVoyager 最小集成示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .demo-image {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .demo-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .tip {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PixelVoyager 最小集成示例</h1>
+        <p class="subtitle">仅需要引入一个JS文件，一行代码即可使用</p>
+        
+        <div class="tip">
+            💡 点击下方任意图片即可体验 PixelVoyager 的强大功能
+        </div>
+        
+        <!-- 示例图片 -->
+        <img src="https://picsum.photos/600/400?random=1" 
+             alt="示例图片 1" 
+             class="demo-image">
+             
+        <img src="https://picsum.photos/600/400?random=2" 
+             alt="示例图片 2" 
+             class="demo-image">
+             
+        <img src="https://picsum.photos/600/400?random=3" 
+             alt="示例图片 3" 
+             class="demo-image">
+        
+        <div class="tip">
+            <strong>集成步骤：</strong><br>
+            1. 引入 pixelvoyager.js<br>
+            2. 调用 PixelVoyager.openImage(url) 即可
+        </div>
+    </div>
+
+    <!-- 引入 PixelVoyager（仅需这一行） -->
+    <script src="pixelvoyager.js"></script>
+    
+    <script>
+        // 最小集成代码 - 仅需几行代码
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有图片绑定点击预览事件
+            document.querySelectorAll('.demo-image').forEach(img => {
+                img.addEventListener('click', function() {
+                    PixelVoyager.openImage(this.src);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
