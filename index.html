@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVoyager - 实用的图片查看器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 900px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .lang-btn {
+            padding: 8px 20px;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .lang-btn:hover,
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .nav-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .nav-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .nav-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .nav-card .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .features {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .features h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .features ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .features li {
+            padding: 10px 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+
+        .features li:before {
+            content: "✨";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">PixelVoyager</h1>
+            <p class="subtitle" id="main-subtitle">实用的图片查看器</p>
+        </div>
+
+        <div class="language-toggle">
+            <button class="lang-btn active" onclick="switchLanguage('zh')">简体中文</button>
+            <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+        </div>
+
+        <!-- 中文内容 -->
+        <div id="zh-content">
+            <div class="nav-grid">
+                <a href="html/pixelvoyager-minimal_zh.html" class="nav-card">
+                    <h3>最小集成示例</h3>
+                    <p>查看 PixelVoyager 的基本使用方法和简单集成示例</p>
+                    <span class="badge">基础演示</span>
+                </a>
+
+                <a href="html/test-configure_zh.html" class="nav-card">
+                    <h3>配置测试页面</h3>
+                    <p>测试和配置 PixelVoyager 的各种参数和选项</p>
+                    <span class="badge">高级配置</span>
+                </a>
+            </div>
+
+            <div class="features">
+                <h3>主要特性</h3>
+                <ul>
+                    <li>轻量级，无外部依赖</li>
+                    <li>响应式设计，适配PC和移动设备</li>
+                    <li>支持缩放、旋转、平移操作</li>
+                    <li>键盘快捷键支持</li>
+                    <li>触摸手势支持</li>
+                    <li>全屏模式</li>
+                    <li>幻灯片模式</li>
+                    <li>可自定义配置</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 英文内容 -->
+        <div id="en-content" class="hidden">
+            <div class="nav-grid">
+                <a href="html/pixelvoyager-minimal_en.html" class="nav-card">
+                    <h3>Minimal Integration Example</h3>
+                    <p>View basic usage and simple integration examples of PixelVoyager</p>
+                    <span class="badge">Basic Demo</span>
+                </a>
+
+                <a href="html/test-configure_en.html" class="nav-card">
+                    <h3>Configuration Test Page</h3>
+                    <p>Test and configure various parameters and options of PixelVoyager</p>
+                    <span class="badge">Advanced Config</span>
+                </a>
+            </div>
+
+            <div class="features">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Lightweight with no external dependencies</li>
+                    <li>Responsive design for PC and mobile devices</li>
+                    <li>Support for zoom, rotate, and pan operations</li>
+                    <li>Keyboard shortcuts support</li>
+                    <li>Touch gesture support</li>
+                    <li>Full-screen mode</li>
+                    <li>Slideshow mode</li>
+                    <li>Customizable configuration</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p id="footer-text">© 2025 PixelVoyager - 一个轻量级的纯JavaScript图片预览库</p>
+        </div>
+    </div>
+
+    <script>
+        function switchLanguage(lang) {
+            const zhContent = document.getElementById('zh-content');
+            const enContent = document.getElementById('en-content');
+            const subtitle = document.getElementById('main-subtitle');
+            const footerText = document.getElementById('footer-text');
+            const langBtns = document.querySelectorAll('.lang-btn');
+
+            // 移除所有按钮的active类
+            langBtns.forEach(btn => btn.classList.remove('active'));
+
+            if (lang === 'zh') {
+                zhContent.classList.remove('hidden');
+                enContent.classList.add('hidden');
+                subtitle.textContent = '实用的图片查看器';
+                footerText.textContent = '© 2025 PixelVoyager - 一个轻量级的纯JavaScript图片预览库';
+                langBtns[0].classList.add('active');
+            } else {
+                zhContent.classList.add('hidden');
+                enContent.classList.remove('hidden');
+                subtitle.textContent = 'Practical Image Viewer';
+                footerText.textContent = '© 2025 PixelVoyager - A lightweight pure JavaScript image preview library';
+                langBtns[1].classList.add('active');
+            }
+        }
+
+        // 检测浏览器语言设置
+        function detectBrowserLanguage() {
+            // 获取浏览器语言设置
+            const browserLang = navigator.language || navigator.userLanguage;
+            // 输出 browserLang
+            console.log('Detected browser language:', browserLang);
+            
+            // 检查是否为中文相关语言
+            if (browserLang.startsWith('zh') || browserLang.includes('zh-CN') || browserLang.includes('zh-TW') || browserLang.includes('zh-HK')) {
+                return 'zh';
+            }
+            
+            // 默认返回英文
+            return 'en';
+        }
+
+        // 页面加载时的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 根据浏览器语言设置选择默认语言
+            const defaultLang = detectBrowserLanguage();
+            switchLanguage(defaultLang);
+        });
+    </script>
+</body>
+</html>

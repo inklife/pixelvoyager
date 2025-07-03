@@ -12,6 +12,10 @@ A lightweight pure JavaScript image preview library with no dependencies, ready 
 - ⚡ **Fast**: High-performance image loading and preview
 - 🔧 **Easy**: One line of code integration
 
+## Online Demo
+
+🌐 **[View Online Demo](https://pixelvoyager.vercel.app/html/pixelvoyager-minimal_en.html)**
+
 ## Quick Start
 
 ### Include the Script

@@ -12,6 +12,10 @@
 - ⚡ **快速**: 高性能的图片加载和预览
 - 🔧 **易用**: 一行代码即可集成
 
+## 在线演示
+
+🌐 **[查看在线演示](https://pixelvoyager.vercel.app/html/pixelvoyager-minimal_zh.html)**
+
 ## 快速开始
 
 ### 引入脚本
