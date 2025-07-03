@@ -14,6 +14,20 @@
 
 ## 快速开始
 
+### 引入脚本
+
+**推荐通过 CDN 引入：**
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
+```
+
+或者本地引入：
+
+```html
+<script src="pixelvoyager.js"></script>
+```
+
 ### 方法一：HTML 结构注册（推荐）
 
 只需用带有 `pixel-voyager-link` 类名的 `<a>` 标签包裹你的图片，库会在页面加载时自动注册这些链接。
@@ -35,8 +49,8 @@
         <img src="another-high-res-image-thumb.jpg" alt="另一张图片">
     </a>
     
-    <!-- 引入脚本，自动生效 -->
-    <script src="pixelvoyager.js"></script>
+    <!-- 引入脚本，推荐使用CDN -->
+    <script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
 </body>
 </html>
 ```
@@ -74,7 +88,7 @@ PixelVoyager.openImage('https://example.com/image.jpg');
         </a>
     </div>
     
-    <script src="pixelvoyager.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
     <!-- 就这样！不需要额外的 JavaScript 代码 -->
 </body>
 </html>
@@ -91,7 +105,7 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 <body>
     <img src="demo.jpg" class="preview-image" alt="示例图片">
     
-    <script src="pixelvoyager.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
     <script>
         document.querySelectorAll('.preview-image').forEach(img => {
             img.addEventListener('click', function() {
@@ -142,6 +156,80 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 **示例:**
 ```javascript
 PixelVoyager.openImage('https://example.com/image.jpg');
+```
+
+## 配置选项
+
+PixelVoyager 提供了丰富的配置选项来自定义用户体验。你可以通过以下方式传入配置：
+
+### 如何传入配置
+
+你可以使用 `configure` 方法配置全局实例：
+
+```javascript
+// 应用自定义设置到全局单例实例
+PixelVoyager.configure({
+    zoomMode: 'center',
+    cornerColor: 'rgba(0, 128, 0, 0.8)',
+    blockingDelay: 500
+});
+```
+
+**HTML结构注册的重要说明：**
+- ✅ **配置有效**: 更新版本支持向HTML结构注册传入配置选项
+- ✅ **全局实例**: 所有HTML结构链接都会使用相同的配置后全局实例
+- ✅ **早期配置**: 在DOM加载前配置以获得最佳效果
+- ✅ **运行时配置**: 使用 `PixelVoyager.configure()` 动态更改设置
+- ✅ **视觉反馈**: 应用配置后你可以看到角标颜色发生变化
+
+**方法：配合HTML结构注册使用配置**
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
+<script>
+    // 使用 configure 方法（推荐）
+    PixelVoyager.configure({
+        zoomMode: 'center',
+        borderColor: 'rgba(255, 0, 0, 0.5)'
+    });
+</script>
+```
+
+### 主要配置选项
+
+| 选项 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `zoomMode` | String | `'cursor'` | 缩放模式：`'cursor'` - 以光标为中心缩放，`'center'` - 以画布中心缩放 |
+| `cornerColor` | String | `'rgba(64, 158, 255, 0.6)'` | 角标颜色 |
+| `moveThreshold` | Number | `1` | 移动阈值（像素），用于检测是否开始拖拽 |
+| `blockingDelay` | Number | `1000` | 拖拽结束后屏蔽点击关闭的延迟时间（毫秒） |
+| `checkInterval` | Number | `15` | 检测鼠标移动的间隔时间（毫秒） |
+
+### 缩放模式详解
+
+**光标中心缩放 (`zoomMode: 'cursor'`)** - 默认模式
+- 鼠标滚轮缩放时，光标始终指向图片上的同一个像素点
+- 双击缩放时，以双击位置为中心进行缩放
+- 适合精确查看图片细节
+
+**画布中心缩放 (`zoomMode: 'center'`)**
+- 始终以画布中心为基准进行缩放
+- 传统的缩放方式
+- 适合快速浏览图片整体
+
+### 配置示例
+
+```javascript
+// 创建一个使用中心缩放和自定义角标颜色的配置
+const voyager = new PixelVoyager({
+    zoomMode: 'center',           // 使用中心缩放模式
+    cornerColor: 'rgba(255, 0, 0, 0.8)',  // 自定义角标颜色（红色）
+    moveThreshold: 5,             // 提高拖拽触发阈值
+    blockingDelay: 500            // 减少拖拽后的延迟时间
+});
+
+// 使用配置后的实例
+voyager.openImage('https://example.com/image.jpg');
 ```
 
 ## 框架集成

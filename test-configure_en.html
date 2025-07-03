@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVoyager Configure Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .config-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #409eff;
+        }
+        
+        .config-section h3 {
+            margin-top: 0;
+            color: #409eff;
+        }
+        
+        .config-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .config-item label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .config-item input,
+        .config-item select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .config-item input[type="color"] {
+            width: 60px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: #409eff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #347ebd;
+        }
+        
+        button.secondary {
+            background: #67c23a;
+        }
+        
+        button.secondary:hover {
+            background: #5daf34;
+        }
+        
+        .test-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .test-image {
+            text-align: center;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            border: 2px dashed #ddd;
+            transition: all 0.3s;
+        }
+        
+        .test-image:hover {
+            border-color: #409eff;
+            background: #ecf5ff;
+        }
+        
+        .test-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .test-image p {
+            margin: 10px 0 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .current-config {
+            background: #e8f4f8;
+            border: 1px solid #b3d8e8;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .current-config h4 {
+            margin: 0 0 10px 0;
+            color: #31708f;
+        }
+        
+        .current-config pre {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            margin: 0;
+        }
+        
+        .modal-open {
+            overflow: hidden;
+        }
+        
+        /* Styling for test images */
+        .pixel-art {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 PixelVoyager Configure Test</h1>
+        
+        <div class="config-section">
+            <h3>📋 Configuration Parameters</h3>
+            <div class="config-controls">
+                <div class="config-item">
+                    <label for="cornerColor">Corner Color:</label>
+                    <input type="color" id="cornerColor" value="#409eff">
+                </div>
+                <div class="config-item">
+                    <label for="moveThreshold">Move Threshold:</label>
+                    <input type="number" id="moveThreshold" value="1" min="0" max="10" step="1">
+                </div>
+                <div class="config-item">
+                    <label for="blockingDelay">Blocking Delay:</label>
+                    <input type="number" id="blockingDelay" value="1000" min="0" max="5000" step="100">
+                </div>
+                <div class="config-item">
+                    <label for="checkInterval">Check Interval:</label>
+                    <input type="number" id="checkInterval" value="15" min="5" max="100" step="5">
+                </div>
+                <div class="config-item">
+                    <label for="zoomMode">Zoom Mode:</label>
+                    <select id="zoomMode">
+                        <option value="cursor">Cursor Center</option>
+                        <option value="center">Canvas Center</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button onclick="applyConfiguration()">🔧 Apply Configuration</button>
+                <button onclick="resetConfiguration()" class="secondary">🔄 Reset to Default</button>
+            </div>
+            
+            <div class="current-config">
+                <h4>Current Configuration:</h4>
+                <pre id="currentConfig">Click "Apply Configuration" to view current settings</pre>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <h3>🖼️ Test Images</h3>
+            <p>Click the images below to test PixelVoyager's various features:</p>
+            <div class="test-images">
+                <div class="test-image">
+                    <a href="https://picsum.photos/800/600?random=1" class="pixel-voyager-link">
+                        <img src="https://picsum.photos/200/150?random=1" alt="Random Image 1">
+                    </a>
+                    <p>Random Image 1 (800x600)</p>
+                </div>
+                <div class="test-image">
+                    <a href="https://picsum.photos/1200/800?random=2" class="pixel-voyager-link">
+                        <img src="https://picsum.photos/200/150?random=2" alt="Random Image 2">
+                    </a>
+                    <p>Random Image 2 (1200x800)</p>
+                </div>
+                <div class="test-image">
+                    <a href="https://picsum.photos/400/300?random=3" class="pixel-voyager-link">
+                        <img src="https://picsum.photos/200/150?random=3" alt="Small Image">
+                    </a>
+                    <p>Small Image (400x300)</p>
+                </div>
+                <div class="test-image">
+                    <a href="https://picsum.photos/2000/1500?random=4" class="pixel-voyager-link">
+                        <img src="https://picsum.photos/200/150?random=4" alt="Large Image">
+                    </a>
+                    <p>Large Image (2000x1500)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <h3>🎮 Usage Instructions</h3>
+            <ul>
+                <li><strong>🖱️ Double-click</strong>: Smart zoom (toggle between fit and magnify)</li>
+                <li><strong>🎯 Mouse wheel</strong>: Zoom image (supports cursor center and canvas center modes)</li>
+                <li><strong>📱 Drag</strong>: Move image position</li>
+                <li><strong>⌨️ ESC</strong>: Close viewer</li>
+                <li><strong>🔧 +/-</strong>: Keyboard zoom</li>
+                <li><strong>🏠 0</strong>: Reset view</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include PixelVoyager -->
+    <script src="pixelvoyager.js"></script>
+    
+    <script>
+        // Get configuration elements
+        const cornerColorInput = document.getElementById('cornerColor');
+        const moveThresholdInput = document.getElementById('moveThreshold');
+        const blockingDelayInput = document.getElementById('blockingDelay');
+        const checkIntervalInput = document.getElementById('checkInterval');
+        const zoomModeSelect = document.getElementById('zoomMode');
+        const currentConfigPre = document.getElementById('currentConfig');
+        
+        // Apply configuration
+        function applyConfiguration() {
+            const config = {
+                cornerColor: cornerColorInput.value,
+                moveThreshold: parseInt(moveThresholdInput.value),
+                blockingDelay: parseInt(blockingDelayInput.value),
+                checkInterval: parseInt(checkIntervalInput.value),
+                zoomMode: zoomModeSelect.value
+            };
+            
+            // Call PixelVoyager.configure method
+            const voyager = PixelVoyager.configure(config);
+            
+            // Display current configuration
+            currentConfigPre.textContent = JSON.stringify(voyager.options, null, 2);
+            
+            // Show success message
+            showMessage('Configuration applied successfully!', 'success');
+            
+            console.log('Applied configuration:', config);
+            console.log('Voyager instance:', voyager);
+        }
+        
+        // Reset configuration
+        function resetConfiguration() {
+            cornerColorInput.value = '#409eff';
+            moveThresholdInput.value = '1';
+            blockingDelayInput.value = '1000';
+            checkIntervalInput.value = '15';
+            zoomModeSelect.value = 'cursor';
+            
+            // Apply default configuration
+            applyConfiguration();
+            
+            showMessage('Configuration reset to default values!', 'info');
+        }
+        
+        // Show message
+        function showMessage(message, type = 'info') {
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = message;
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 6px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                transition: all 0.3s ease;
+                background: ${type === 'success' ? '#67c23a' : '#409eff'};
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            `;
+            
+            document.body.appendChild(messageDiv);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.parentNode.removeChild(messageDiv);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Listen for configuration changes
+        function onConfigChange() {
+            // Add real-time preview functionality here if needed
+            console.log('Configuration changed');
+        }
+        
+        // Add change listeners to all configuration inputs
+        [cornerColorInput, moveThresholdInput, blockingDelayInput, checkIntervalInput, zoomModeSelect].forEach(input => {
+            input.addEventListener('change', onConfigChange);
+            input.addEventListener('input', onConfigChange);
+        });
+        
+        // Initialize after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show welcome message
+            setTimeout(() => {
+                showMessage('Welcome to PixelVoyager Configure Test Page!', 'info');
+            }, 500);
+            
+            // Apply initial configuration
+            applyConfiguration();
+        });
+        
+        // Add additional click event for test images (for testing purposes)
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a.pixel-voyager-link');
+            if (link) {
+                console.log('Clicked image link:', link.href);
+                console.log('Current voyager options:', window.pixelVoyagerInstance?.options);
+            }
+        });
+    </script>
+</body>
+</html>

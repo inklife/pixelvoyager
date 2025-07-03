@@ -1,6 +1,6 @@
 # PixelVoyager: A Useful Image Viewer
 
-*[简体中文](README-zh.md) | English*
+*[简体中文](README_zh.md) | English*
 
 A lightweight pure JavaScript image preview library with no dependencies, ready to use out of the box.
 
@@ -13,6 +13,20 @@ A lightweight pure JavaScript image preview library with no dependencies, ready 
 - 🔧 **Easy**: One line of code integration
 
 ## Quick Start
+
+### Include the Script
+
+**Recommended via CDN:**
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
+```
+
+Or include locally:
+
+```html
+<script src="pixelvoyager.js"></script>
+```
 
 ### Method 1: HTML Structure Registration (Recommended)
 
@@ -35,8 +49,8 @@ Simply wrap your images with `<a>` tags that have the `pixel-voyager-link` class
         <img src="another-high-res-image-thumb.jpg" alt="Another Image">
     </a>
     
-    <!-- Include the script and it works automatically -->
-    <script src="pixelvoyager.js"></script>
+    <!-- Include the script via CDN (recommended) -->
+    <script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
 </body>
 </html>
 ```
@@ -74,7 +88,7 @@ PixelVoyager.openImage('https://example.com/image.jpg');
         </a>
     </div>
     
-    <script src="pixelvoyager.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
     <!-- That's it! No additional JavaScript needed -->
 </body>
 </html>
@@ -91,7 +105,7 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 <body>
     <img src="demo.jpg" class="preview-image" alt="Example Image">
     
-    <script src="pixelvoyager.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
     <script>
         document.querySelectorAll('.preview-image').forEach(img => {
             img.addEventListener('click', function() {
@@ -142,6 +156,80 @@ Preview a single image programmatically
 **Example:**
 ```javascript
 PixelVoyager.openImage('https://example.com/image.jpg');
+```
+
+## Configuration Options
+
+PixelVoyager provides rich configuration options to customize the user experience. You can pass configurations in the following ways:
+
+### How to Pass Configuration
+
+You can configure the global instance using the `configure` method:
+
+```javascript
+// Apply custom settings to the single global instance
+PixelVoyager.configure({
+    zoomMode: 'center',
+    cornerColor: 'rgba(0, 128, 0, 0.8)',
+    blockingDelay: 500
+});
+```
+
+**Important Notes for HTML Structure Registration:**
+- ✅ **Configuration works**: The updated version supports passing configuration options to HTML structure registration
+- ✅ **Global instance**: All HTML structure links will use the same configured global instance
+- ✅ **Early configuration**: Configure before DOM loads for best results
+- ✅ **Runtime configuration**: Use `PixelVoyager.configure()` to change settings dynamically
+- ✅ **Visual feedback**: You can see the corner indicators change color when configuration is applied
+
+**Method: Use Configuration with HTML Structure Registration**
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/inklife/pixelvoyager/pixelvoyager.js"></script>
+<script>
+    // Use the configure method (recommended)
+    PixelVoyager.configure({
+        zoomMode: 'center',
+        borderColor: 'rgba(255, 0, 0, 0.5)'
+    });
+</script>
+```
+
+### Main Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `zoomMode` | String | `'cursor'` | Zoom mode: `'cursor'` - zoom centered on cursor, `'center'` - zoom centered on canvas |
+| `cornerColor` | String | `'rgba(64, 158, 255, 0.6)'` | Corner indicator color |
+| `moveThreshold` | Number | `1` | Movement threshold (pixels) for detecting drag start |
+| `blockingDelay` | Number | `1000` | Delay time (ms) to block click-to-close after drag ends |
+| `checkInterval` | Number | `15` | Mouse movement detection interval (ms) |
+
+### Zoom Mode Details
+
+**Cursor-centered zoom (`zoomMode: 'cursor'`)** - Default mode
+- When zooming with mouse wheel, cursor always points to the same pixel on the image
+- When double-clicking to zoom, zooms centered on the click position
+- Suitable for precise detail viewing
+
+**Canvas-centered zoom (`zoomMode: 'center'`)**
+- Always zooms relative to the canvas center
+- Traditional zoom behavior
+- Suitable for quick image browsing
+
+### Configuration Example
+
+```javascript
+// Create a configuration with center zoom and custom corner color
+const voyager = new PixelVoyager({
+    zoomMode: 'center',           // Use center zoom mode
+    cornerColor: 'rgba(255, 0, 0, 0.8)',  // Custom corner color (red)
+    moveThreshold: 5,             // Increase drag trigger threshold
+    blockingDelay: 500            // Reduce delay after drag
+});
+
+// Use the configured instance
+voyager.openImage('https://example.com/image.jpg');
 ```
 
 ## Framework Integration

@@ -27,12 +27,11 @@
             
             // 配置选项
             this.options = {
-                showBorder: true,        // 是否显示图片边界
-                borderColor: 'rgba(64, 158, 255, 0.3)',  // 边界颜色
                 cornerColor: 'rgba(64, 158, 255, 0.6)',  // 角标颜色
                 moveThreshold: 1,        // 移动阈值（像素），用于检测是否开始拖拽
                 blockingDelay: 1000,     // 拖拽结束后屏蔽点击关闭的延迟时间（毫秒）
                 checkInterval: 15,       // 检测鼠标移动的间隔时间（毫秒）
+                zoomMode: 'cursor',      // 缩放模式：'cursor' - 以光标为中心缩放，'center' - 以画布中心缩放
                 ...options
             };
             
@@ -74,11 +73,34 @@
             this.handleResize = this.handleResize.bind(this);
         }
         
-        static init() {
+        static init(options = {}) {
             if (!window.pixelVoyagerInstance) {
-                window.pixelVoyagerInstance = new PixelVoyager();
+                window.pixelVoyagerInstance = new PixelVoyager(options);
             }
             return window.pixelVoyagerInstance;
+        }
+        
+        // 静态方法：配置全局实例
+        static configure(options = {}) {
+            if (typeof options !== 'object' || options === null) {
+                console.warn('PixelVoyager.configure: options must be an object');
+                return PixelVoyager.init();
+            }
+            
+            const voyager = PixelVoyager.init();
+            
+            // 确保 options 存在
+            if (!voyager.options) {
+                voyager.options = {};
+            }
+            
+            // 合并配置
+            Object.assign(voyager.options, options);
+            
+            console.log('PixelVoyager configured with:', options);
+            console.log('Current options:', voyager.options);
+            
+            return voyager;
         }
         
         // 静态方法：快速打开图片
@@ -229,6 +251,7 @@
                 font-size: 24px;
                 width: 40px;
                 height: 40px;
+                padding: 0;
                 border-radius: 50%;
                 cursor: pointer;
                 display: flex;
@@ -246,6 +269,7 @@
                 font-size: 18px;
                 width: 40px;
                 height: 40px;
+                padding: 0;
                 border-radius: 50%;
                 cursor: pointer;
                 display: flex;
@@ -322,7 +346,7 @@
                     position: absolute;
                     width: 20px;
                     height: 20px;
-                    border: 3px solid rgba(64, 158, 255, 0.7);
+                    border: 3px solid ${this.options.cornerColor};
                     pointer-events: none;
                     opacity: 0;
                     transition: opacity 0.3s ease;
@@ -517,22 +541,24 @@
         
         // 更新边界指示器
         updateBorderIndicator() {
-            if (!this.options.showBorder || !this.cornerIndicators) return;
+            if (!this.cornerIndicators) return;
             
-            // 判断是否需要显示边界指示器
-            const shouldShowBorder = this.isDragging || 
+            // 判断是否需要显示角标指示器
+            const shouldShowCorners = this.isDragging || 
                                    this.scale > 1.1 || 
                                    Math.abs(this.translateX) > 5 || 
                                    Math.abs(this.translateY) > 5;
             
-            if (shouldShowBorder) {
-                // 更新角标位置
+            if (shouldShowCorners) {
+                // 显示角标，并更新颜色
                 this.cornerIndicators.forEach((corner, index) => {
+                    // 动态更新角标颜色，确保使用最新的配置
+                    corner.style.borderColor = this.options.cornerColor;
                     corner.style.opacity = '1';
                 });
                 
             } else {
-                // 隐藏边界指示器
+                // 隐藏角标指示器
                 this.cornerIndicators.forEach(corner => {
                     corner.style.opacity = '0';
                 });
@@ -646,11 +672,19 @@
             e.preventDefault();
             
             const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
             const delta = e.deltaY > 0 ? 0.9 : 1.1;
-            this.zoomAt(x, y, delta);
+            
+            if (this.options.zoomMode === 'cursor') {
+                // 以鼠标光标为中心缩放
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                this.zoomAtCursor(mouseX, mouseY, delta);
+            } else {
+                // 以画布中心缩放（原有行为）
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                this.zoomAt(x, y, delta);
+            }
         }
         
         // 在指定点缩放
@@ -663,6 +697,36 @@
                 this.translateX = (this.translateX - x / this.scale) * scaleFactor + x / newScale;
                 this.translateY = (this.translateY - y / this.scale) * scaleFactor + y / newScale;
                 this.scale = newScale;
+                
+                this.draw();
+                this.updateScaleInfo();
+            }
+        }
+        
+        // 以光标为中心缩放
+        zoomAtCursor(mouseX, mouseY, factor) {
+            const newScale = Math.max(this.minScale, Math.min(this.maxScale, this.scale * factor));
+            
+            if (newScale !== this.scale) {
+                // 获取画布中心点
+                const canvasRect = this.canvas.getBoundingClientRect();
+                const centerX = canvasRect.width / 2;
+                const centerY = canvasRect.height / 2;
+                
+                // 计算鼠标相对于画布中心的位置
+                const offsetX = mouseX - centerX;
+                const offsetY = mouseY - centerY;
+                
+                // 计算缩放前鼠标指向的图片像素坐标
+                const imageX = (offsetX - this.translateX * this.scale) / this.scale;
+                const imageY = (offsetY - this.translateY * this.scale) / this.scale;
+                
+                // 更新缩放比例
+                this.scale = newScale;
+                
+                // 重新计算位移，使鼠标仍然指向同一个图片像素
+                this.translateX = (offsetX - imageX * this.scale) / this.scale;
+                this.translateY = (offsetY - imageY * this.scale) / this.scale;
                 
                 this.draw();
                 this.updateScaleInfo();
@@ -749,8 +813,6 @@
         // 双击事件
         handleDoubleClick(e) {
             const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
             
             // 计算相对于初始铺满状态的缩放比例
             const relativeToInitial = this.scale / (this.imageData.initialScale || 1);
@@ -762,7 +824,15 @@
                 this.updateScaleInfo();
             } else {
                 // 否则放大到双击位置（相对于当前状态的2倍）
-                this.zoomAt(x, y, 2);
+                if (this.options.zoomMode === 'cursor') {
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+                    this.zoomAtCursor(mouseX, mouseY, 2);
+                } else {
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    this.zoomAt(x, y, 2);
+                }
             }
         }
         
