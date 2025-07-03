@@ -123,7 +123,7 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 
 ### 完整示例
 
-查看 [pixelvoyager-minimal-zh.html](pixelvoyager-minimal-zh.html) 文件获取完整的集成示例。
+查看 [html/pixelvoyager-minimal_zh.html](html/pixelvoyager-minimal_zh.html) 文件获取完整的集成示例。
 
 ## API 文档
 

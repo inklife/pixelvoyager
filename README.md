@@ -123,7 +123,7 @@ PixelVoyager.openImage('https://example.com/image.jpg');
 
 ### Full Example
 
-Check the [pixelvoyager-minimal-en.html](pixelvoyager-minimal-en.html) file for a complete integration example.
+Check the [html/pixelvoyager-minimal_en.html](html/pixelvoyager-minimal_en.html) file for a complete integration example.
 
 ## API Documentation
 
