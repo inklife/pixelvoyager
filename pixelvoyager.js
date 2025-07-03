@@ -266,7 +266,7 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
             `;
             instructions.innerHTML = `
-                双击放大/重置 • 滚轮缩放 • 拖拽移动 • ESC 关闭 • 蓝色角标指示图片范围 • 百分比为相对原图比例 • PixelVoyager 带你探索每一个像素
+                🖱️ Double-click: Zoom • Scroll: Scale • 📱 Drag: Move • ⌨️ ESC: Close
             `;
             
             // 创建 Canvas 容器
